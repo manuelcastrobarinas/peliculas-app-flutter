@@ -1,6 +1,9 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class CastingCards extends StatelessWidget {
+  const CastingCards({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,7 +22,7 @@ class _CastCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       width: 110,
       height: 100,
       child: Column(children: [

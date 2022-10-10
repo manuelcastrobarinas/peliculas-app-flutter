@@ -13,6 +13,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) { 
 
     final moviesProvider = Provider.of<MoviesProvider>(context);
+    final popularMovies = Provider.of<PopularMoviesService>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +28,13 @@ class HomePage extends StatelessWidget {
           // ignore: prefer_const_literals_to_create_immutables
           children: [
              CardSwipper( movies: moviesProvider.onDisplayMovies ),
-             MovieSlider(),
+             MovieSlider( 
+              movies: popularMovies.movies,
+              title: 'Populares',
+              nextPageMovie: (){
+                popularMovies.getPopularMovies();
+              }
+            ),
           ],
         ),
       ),
