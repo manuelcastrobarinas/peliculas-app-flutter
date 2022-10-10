@@ -23,6 +23,7 @@ class DetailsPage extends StatelessWidget {
             _Overview(),
             _Overview(),
             _Overview(),
+            // ignore: prefer_const_constructors
             CastingCards(),
           ]),
         ),
@@ -103,7 +104,7 @@ class _Overview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Text(
         'Exercitation consectetur dolor ut quis eiusmod proident laboris eiusmod officia eu. Sint Lorem nostrud duis nostrud aliquip ut Lorem ullamco.Nulla ad esse laborum ea eiusmod. Reprehenderit et laboris exercitation magna enim consectetur id tempor sunt ipsum deserunt ipsum non. Dolor excepteur dolore cillum cillum aliquip dolor incididunt enim.',
         textAlign: TextAlign.justify,

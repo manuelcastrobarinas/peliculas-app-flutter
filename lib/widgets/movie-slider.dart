@@ -1,26 +1,63 @@
+// ignore_for_file: file_names
+import '../models/movie.dart';
 import 'package:flutter/material.dart';
 
-class MovieSlider extends StatelessWidget {
-  const MovieSlider({super.key});
+class MovieSlider extends StatefulWidget {
+
+  final List<Movie> movies;
+  final String title;
+  final Function nextPageMovie;
+
+  const MovieSlider({
+    super.key, 
+    required this.movies,
+    required this.title, 
+    required this.nextPageMovie,
+  });
+
+  @override
+  State<MovieSlider> createState() => _MovieSliderState();
+}
+
+class _MovieSliderState extends State<MovieSlider> {
+
+  final ScrollController scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent -200 ) {
+       widget.nextPageMovie();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 290,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Text('Populares',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Text(widget.title,style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 16)),
           ),
 
           Expanded(
             child: ListView.builder(
+              controller: scrollController,
               scrollDirection: Axis.horizontal,
-              itemCount: 20,
-              itemBuilder: (_, i) => _MoviePoster(),
+              itemCount: widget.movies.length,
+              itemBuilder: (_, i) => _MoviePoster(movies:widget.movies , cantidad: i ),
             ),
           ),
         ],
@@ -30,9 +67,18 @@ class MovieSlider extends StatelessWidget {
 }
 
 class _MoviePoster extends StatelessWidget {
+  
+  final List<Movie> movies;
+  final int cantidad;
+
+  const _MoviePoster({
+    required this.movies, 
+    required this.cantidad,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final movie = movies[cantidad];
     return  Container(
       width: 130,
       height: 260,
@@ -42,11 +88,11 @@ class _MoviePoster extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: ()=> Navigator.pushNamed(context, 'details', arguments: 'movie-instance'),
-            child: ClipRRect(
+            child: ClipRRect( 
               borderRadius: BorderRadius.circular(20),
-              child: const FadeInImage(
-                placeholder: AssetImage('assets/no-image.jpg'),
-                image: NetworkImage('https://loremflickr.com/640/360'),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: NetworkImage(movie.moviePosterImage),
                 width: 130,
                 height: 190,
                 fit: BoxFit.cover,
@@ -54,12 +100,12 @@ class _MoviePoster extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
-            'star wars dasdasdasdasdasdczc holasadasasdasdas mundo',
+           Text(
+            movie.title,
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12),
+            style: const TextStyle(fontSize: 12),
           
           )
         ],

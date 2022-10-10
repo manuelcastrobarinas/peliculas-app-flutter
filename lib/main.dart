@@ -4,16 +4,19 @@ import 'package:peliculas/services/movies.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(AppProviderState());
+  runApp(const AppProviderState());
 }
 
 class AppProviderState extends StatelessWidget {
+  const AppProviderState({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_)=> MoviesProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_)=> PopularMoviesService(),lazy:  false,)
       ],
       child: const MyApp(),
     );
