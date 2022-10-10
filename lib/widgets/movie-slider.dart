@@ -35,7 +35,7 @@ class _MoviePoster extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Container(
       width: 130,
-      height: 220,
+      height: 260,
       margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         // ignore: prefer_const_literals_to_create_immutables
@@ -48,7 +48,7 @@ class _MoviePoster extends StatelessWidget {
                 placeholder: AssetImage('assets/no-image.jpg'),
                 image: NetworkImage('https://loremflickr.com/640/360'),
                 width: 130,
-                height: 200,
+                height: 190,
                 fit: BoxFit.cover,
               ),
             ),
@@ -59,6 +59,7 @@ class _MoviePoster extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
             textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 12),
           
           )
         ],

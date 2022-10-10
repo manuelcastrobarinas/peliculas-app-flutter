@@ -1,15 +1,19 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:peliculas/services/movies.dart';
 import 'package:peliculas/widgets/card-swipper.dart';
-import 'package:peliculas/widgets/casting-cards.dart';
 import 'package:peliculas/widgets/movie-slider.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) { 
+
+    final moviesProvider = Provider.of<MoviesProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -22,8 +26,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           // ignore: prefer_const_literals_to_create_immutables
           children: [
-             CardSwipper(),
-             MovieSlider(),
+             CardSwipper( movies: moviesProvider.onDisplayMovies ),
              MovieSlider(),
           ],
         ),
