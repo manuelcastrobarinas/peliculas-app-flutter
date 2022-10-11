@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:peliculas/models/credits-response.dart';
 import 'package:peliculas/models/now-playing-response.dart';
 import 'package:peliculas/models/popular-movies.dart';
 import '../models/movie.dart';
@@ -10,6 +11,10 @@ class MoviesProvider extends ChangeNotifier{
   final String _baseUrl   = 'api.themoviedb.org';
   final String _language  = 'es-ES';
   List<Movie> onDisplayMovies = [];
+
+  Map<int, List<Cast>> moviesCasting = {
+
+  };
 
   MoviesProvider(){
     getNowPlayMovies();
@@ -31,6 +36,23 @@ class MoviesProvider extends ChangeNotifier{
     print("@ERROR get now play movies: $error" );  
     }
     notifyListeners();
+  }
+  
+
+  Future<List<Cast>> getMovieCasting(int movieId) async {
+
+    if(moviesCasting.containsKey(movieId)) return moviesCasting[movieId]!; // verifica que si ya se cargaron los actores antes, no se vuelva a hacer la peticion al servidor
+  
+    var url = Uri.https(_baseUrl, '3/movie/$movieId/credits', {
+      'api_key'   : _apiKey,
+      'language'  : _language,
+      'page'      : '1'
+    });
+
+    final response = await http.get(url);
+    final data = CreditsResponse.fromJson(response.body);
+    moviesCasting[movieId] = data.cast;
+    return data.cast;
   }
 }
 
