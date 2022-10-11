@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:peliculas/models/credits-response.dart';
 import 'package:peliculas/models/now-playing-response.dart';
 import 'package:peliculas/models/popular-movies.dart';
+import 'package:peliculas/models/sarch-movie-response.dart';
+
 import '../models/movie.dart';
 
 class MoviesProvider extends ChangeNotifier{
@@ -22,7 +24,7 @@ class MoviesProvider extends ChangeNotifier{
 
   getNowPlayMovies() async {
     try {   
-    var url = Uri.https(_baseUrl, '3/movie/now_playing', {
+    final url = Uri.https(_baseUrl, '3/movie/now_playing', {
       'api_key'   : _apiKey,
       'language'  : _language,
       'page'      : '1'
@@ -43,7 +45,7 @@ class MoviesProvider extends ChangeNotifier{
 
     if(moviesCasting.containsKey(movieId)) return moviesCasting[movieId]!; // verifica que si ya se cargaron los actores antes, no se vuelva a hacer la peticion al servidor
   
-    var url = Uri.https(_baseUrl, '3/movie/$movieId/credits', {
+    final url = Uri.https(_baseUrl, '3/movie/$movieId/credits', {
       'api_key'   : _apiKey,
       'language'  : _language,
       'page'      : '1'
@@ -54,6 +56,19 @@ class MoviesProvider extends ChangeNotifier{
     moviesCasting[movieId] = data.cast;
     return data.cast;
   }
+
+  Future <List<Movie>> searchMovies(String query) async {
+    final url = Uri.https(_baseUrl, '3/search/movie', {
+      'api_key'   : _apiKey,
+      'language'  : _language,
+      'query'     : query,
+    });
+
+    final response = await http.get(url);
+    final data = SearchMovieResponse.fromJson(response.body);
+    return data.results;
+  }
+
 }
 
 
@@ -73,9 +88,9 @@ class PopularMoviesService extends ChangeNotifier {
 
   getPopularMovies() async {
     try {   
-      
+    
       _popularPage++;
-      var url = Uri.https(_baseUrl, '/3/movie/popular', {
+      final url = Uri.https(_baseUrl, '/3/movie/popular', {
         'api_key' : _apiKey,
         'language': _language,
         'page'    : '$_popularPage',

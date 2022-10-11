@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:peliculas/search/search_delegate.dart';
 import 'package:peliculas/services/movies.dart';
 import 'package:peliculas/widgets/card-swipper.dart';
 import 'package:peliculas/widgets/movie-slider.dart';
@@ -20,7 +21,10 @@ class HomePage extends StatelessWidget {
         elevation: 0,
         title: const Center(child: Text('Peliculas en cines')),
         actions: [
-          IconButton(onPressed: (){}, icon: const Icon(Icons.search,color: Colors.white,))
+          IconButton(
+            icon: const Icon(Icons.search,color: Colors.white),
+            onPressed: () => showSearch(context: context, delegate: MovieSearchDelegate()), 
+          )
         ],
       ),
       body: SingleChildScrollView(
