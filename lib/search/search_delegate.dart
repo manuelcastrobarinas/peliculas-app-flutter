@@ -30,26 +30,27 @@ class MovieSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-     return Text("build Results");
+    return _emptyContainer('No hubo resultados de la busqueda');
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    
     if(query.isEmpty) {
-     _emptyContainer();
+     _emptyContainer('');
     }
     
     final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
-    
-    return FutureBuilder(
-      future: moviesProvider.searchMovies(query),
-      builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) { 
-        
-        if(!snapshot.hasData) {
-          return _emptyContainer();
-        }
+    moviesProvider.getSuggestionsByQuery( query );
 
+    return StreamBuilder(
+      stream: moviesProvider.suggestionsStream,
+      builder: (_, AsyncSnapshot<List<Movie>> snapshot) { 
+        
+        if(!snapshot.hasData) return _emptyContainer('');
+        
         final movie = snapshot.data!;
+        
         return ListView.builder(
           itemCount:  movie.length,
           itemBuilder: (_ , index ) =>  _MovieItem(movie:movie[index]),
@@ -59,9 +60,17 @@ class MovieSearchDelegate extends SearchDelegate {
   }
 
 
-  Widget _emptyContainer(){
-    return const Center(
-      child: Icon(Icons.movie_creation_outlined, color: Colors.black45,size: 150),
+  Widget _emptyContainer(String? text){
+    return  Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.movie_creation_outlined, color: Colors.black45,size: 150),
+          Text('$text',style: TextStyle(color: Colors.black54)),
+        ],
+      ),
+    
     );
   }
 
