@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:peliculas/helpers/debouncer.dart';
 import 'package:peliculas/models/credits-response.dart';
 import 'package:peliculas/models/now-playing-response.dart';
 import 'package:peliculas/models/popular-movies.dart';
@@ -13,10 +16,10 @@ class MoviesProvider extends ChangeNotifier{
   final String _baseUrl   = 'api.themoviedb.org';
   final String _language  = 'es-ES';
   List<Movie> onDisplayMovies = [];
-
-  Map<int, List<Cast>> moviesCasting = {
-
-  };
+  Map<int, List<Cast>> moviesCasting = {};
+  final debouncer = Debouncer(duration: const Duration(milliseconds: 500));
+  final StreamController<List<Movie>> _suggestionStreamController = StreamController.broadcast();
+  Stream<List<Movie>> get suggestionsStream => _suggestionStreamController.stream;
 
   MoviesProvider(){
     getNowPlayMovies();
@@ -69,6 +72,20 @@ class MoviesProvider extends ChangeNotifier{
     return data.results;
   }
 
+  void getSuggestionsByQuery(String query) {
+    debouncer.value = '';
+    debouncer.onValue = (value) async {
+      print("tenemos valor $value");
+      final results = await searchMovies(value);
+      _suggestionStreamController.add(results);
+    };
+
+    final timer = Timer.periodic(const Duration(milliseconds: 300), (_) { 
+      debouncer.value = query;
+    });
+
+    Future.delayed(const Duration(milliseconds: 301)).then((_) => timer.cancel());
+  }
 }
 
 
